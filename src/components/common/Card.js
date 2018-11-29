@@ -22,7 +22,8 @@ const styles = {
     elevation: 1,
     marginLeft: 5,
     marginRight: 5,
-  }
+    marginTop: 30,
+  },
 };
 
 export { Card };

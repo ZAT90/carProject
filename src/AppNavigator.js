@@ -1,13 +1,15 @@
 import React from 'react';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import firebase from 'firebase';
 import Login from './components/Login';
 import HomeScreen from './components/HomeScreen';
 import Carlist from './components/Carlist';
 import User from './components/User';
 import Settings from './components/Settings';
 import SplashScreen from './components/SplashScreen';
+import ReservationScreen from './components/carFolder/ReservationScreen';
+import CompletedReservations from './components/carFolder/CompletedReservations';
+
 
 const TabNavigator = createBottomTabNavigator(
   {
@@ -45,17 +47,27 @@ const TabNavigator = createBottomTabNavigator(
 );
 const AppNavigator = createStackNavigator({
   Splash: {
-    screen: SplashScreen
+    screen: SplashScreen,
   },
   Login: {
     screen: Login,
   },
+
+},
+{
+  headerMode: 'none',
 });
 
 const StackNavigator = createStackNavigator({
 
   auth: AppNavigator,
   main: TabNavigator,
+  Reserve: {
+    screen: ReservationScreen,
+  },
+  CompletedRes: {
+    screen: CompletedReservations,
+  },
 
 },
 {

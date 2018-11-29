@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import { createAppContainer } from 'react-navigation';
-import Login from './components/Login';
+import reducers from './reducers';
 import StackNavigator from './AppNavigator';
 
 const AppContainer = createAppContainer(StackNavigator);
 
 export default class App extends Component {
- 
   render() {
+    console.disableYellowBox = true;
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
-      <AppContainer />
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
 
     );
   }
