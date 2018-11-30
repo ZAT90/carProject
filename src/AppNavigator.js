@@ -9,6 +9,7 @@ import Settings from './components/Settings';
 import SplashScreen from './components/SplashScreen';
 import ReservationScreen from './components/carFolder/ReservationScreen';
 import CompletedReservations from './components/carFolder/CompletedReservations';
+import ActiveReservation from './components/carFolder/ActiveReservation';
 
 
 const TabNavigator = createBottomTabNavigator(
@@ -58,17 +59,25 @@ const AppNavigator = createStackNavigator({
   headerMode: 'none',
 });
 
-const StackNavigator = createStackNavigator({
-
-  auth: AppNavigator,
-  main: TabNavigator,
+const CarNavigator = createStackNavigator({
   Reserve: {
     screen: ReservationScreen,
   },
   CompletedRes: {
     screen: CompletedReservations,
   },
+  ActiveRes: {
+    screen: ActiveReservation,
+  },
+}, {
+  headerMode: 'none',
+});
 
+const StackNavigator = createStackNavigator({
+
+  auth: AppNavigator,
+  main: TabNavigator,
+  car: CarNavigator,
 },
 {
   headerMode: 'none',

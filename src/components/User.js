@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
+import firebase from 'firebase';
 import {
-  Card, CardSection, Input, Button, Spinner,
+  Card, CardSection, Header,
 } from './common';
+import styles from './Styles';
 
 class User extends Component {
   render() {
+    const { currentUser } = firebase.auth();
+    console.log('USer current', currentUser);
     return (
-      <View>
-        <Text>This is my User</Text>
-      </View>
+      <Card>
+        <Header isCarList={false} headerText="Your profile" />
+        <CardSection>
+          <Text style={styles.carnamefont}>
+Email:
+            {' '}
+            {currentUser.email}
+          </Text>
+        </CardSection>
+      </Card>
     );
   }
 }

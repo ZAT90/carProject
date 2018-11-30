@@ -5,8 +5,9 @@ import {
 import { connect } from 'react-redux';
 import { carListfetch } from '../actions';
 import {
-  CardSection, Spinner, Header,
+  CardSection, Spinner, Header,Card
 } from './common';
+import styles from './Styles';
 
 class Carlist extends Component {
   componentDidMount() {
@@ -29,13 +30,13 @@ class Carlist extends Component {
       >
         <View>
           <CardSection style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 18 }}>{`${carItems[1].carModel} ${carItems[1].carName}`}</Text>
-            <Text style={{ fontSize: 18, marginTop: 5 }}>
+            <Text style={styles.carnamefont}>{`${carItems[1].carModel} ${carItems[1].carName}`}</Text>
+            <Text style={styles.mfg_yearfont}>
 Manufacture year:
               {' '}
               { carItems[1].mfg_year }
             </Text>
-            <Text style={{ marginTop: 5 }}>
+            <Text style={styles.transmissionfont}>
 Transmission:
               {' '}
               { carItems[1].transmission }
@@ -52,17 +53,17 @@ Transmission:
     const { navigation } = this.props;
     console.log('this.props.cars', cars);
     return (
-      <View>
-        <Header isCarList onPressRight={() => navigation.navigate('CompletedRes')} headerText="List of Cars" />
+      <Card>
+        <Header onPressRight={() => navigation.navigate('CompletedRes')} onPressBack={() => navigation.navigate('ActiveRes')} isCarList={true} headerText="List of Cars" />
         {cars ? (
           <FlatList
             data={cars}
             renderItem={(item, index) => this.renderListItems(item, index)}
-            keyExtractor={(item, index) => item[0]}
+            keyExtractor={item => item[0]}
           />
         ) : <Spinner />}
 
-      </View>
+      </Card>
     );
   }
 }

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Text, Alert } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
+import { reserveListfetch } from '../../actions';
 import {
-  Card, CardSection, Input, Button, Spinner, Header,
+  Card, CardSection, Input, Button, Header,
 } from '../common';
 
 class ReservationScreen extends Component {
@@ -15,12 +16,21 @@ class ReservationScreen extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.reserveListfetch();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('nextprop home', nextProps);
+  }
+
 
   onPressReserve() {
     const { navigation } = this.props;
     const { currentUser } = firebase.auth();
     const { startText, finishtext } = this.state;
     const carId = navigation.getParam('carId', 'NO-ID');
+    const carDetails = navigation.getParam('carDetails', 'some default value');
     const userId = currentUser.uid;
     // this.checkIfAlreadyActivated();
     if (this.checkIfAlreadyActivated()) {
@@ -33,7 +43,7 @@ class ReservationScreen extends Component {
     } else {
       console.log('this is a test gone');
       if (startText != '' && finishtext != '') {
-        this.createReservation(carId, startText, finishtext, userId);
+        this.createReservation(carId, startText, finishtext, userId, carDetails);
       } else {
         Alert.alert(
           'Oops!',
@@ -45,7 +55,8 @@ class ReservationScreen extends Component {
     }
   }
 
-  createReservation(carId, startText, finishtext, userId) {
+  createReservation(carId, startText, finishtext, userId, carDetails) {
+    const { navigation } = this.props;
     firebase.database().ref(`/reservations/${userId}`)
       .push({
         carId,
@@ -53,24 +64,26 @@ class ReservationScreen extends Component {
         isCompleted: false,
         start_point: startText,
         finish_point: finishtext,
+        carModel: carDetails.carModel,
+        carName: carDetails.carName,
+        mfg_year: carDetails.mfg_year,
+        transmission: carDetails.transmission,
       })
       .then((res) => {
         console.log('response', res);
         Alert.alert(
           'Success!',
           'Please check in Active Reservation Screen',
-          [{ text: 'OK', onPress: () => console.log('ok pressed') }],
+          [{ text: 'OK', onPress: () => navigation.navigate('ActiveRes') }],
 
         );
       });
   }
 
   checkIfAlreadyActivated() {
-    const { currentUser } = firebase.auth();
-    const { navigation, reservations } = this.props;
+    const { reservations } = this.props;
     const checkres = reservations.filter(value => value[1].isActive);
     if (checkres.length > 0) {
-      console.log('it is true');
       return true;
     }
     return false;
@@ -78,12 +91,11 @@ class ReservationScreen extends Component {
 
   render() {
     const { navigation, reservations } = this.props;
-    const carId = navigation.getParam('carId', 'NO-ID');
     const carDetails = navigation.getParam('carDetails', 'some default value');
     console.log('reservations render', reservations);
     return (
       <Card>
-        <Header onPressBack={() => navigation.goBack()} headerText="Reserve a trip" />
+        <Header onPressBack={() => navigation.navigate('main')} isCarList={false} headerText="Reserve a trip" />
         <CardSection style={{ flexDirection: 'column' }}>
           <Text style={{ fontSize: 18 }}>{`${carDetails.carModel} ${carDetails.carName}`}</Text>
           <Text style={{ fontSize: 18, marginTop: 5 }}>
@@ -123,7 +135,7 @@ Transmission:
 
 const mapStateToProps = (state) => {
   console.log('state reserve', state.reservelist);
-  return { reservations: Object.entries(state.reservelist) };
+  return { reservations: state.reservelist ? Object.entries(state.reservelist) : [] };
 };
 
-export default connect(mapStateToProps, null)(ReservationScreen);
+export default connect(mapStateToProps, { reserveListfetch })(ReservationScreen);

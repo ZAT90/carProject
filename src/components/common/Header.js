@@ -12,20 +12,22 @@ const Header = (props) => {
   const myReservationText = 'Active reservation';
   const completeResText = 'Completed reservations';
 
+  console.log('props', props);
+
   return (
     <View style={viewStyle}>
       <TouchableOpacity
         style={leftHeader}
         onPress={props.onPressBack}
       >
-        <Text style={textgreen}>{props.isCarList?myReservationText:backText}</Text>
+        <Text style={textgreen}>{props.isCarList ? myReservationText:backText}</Text>
       </TouchableOpacity>
       <View style={middleHeader}><Text style={textStyle}>{props.headerText}</Text></View>
       <TouchableOpacity
         style={rightHeader}
         onPress={props.onPressRight}
       >
-        <Text style={textblue}>{props.isCarList?completeResText:''}</Text>
+        <Text style={textblue}>{props.isCarList ? completeResText:''}</Text>
 
       </TouchableOpacity>
     </View>

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import firebase from 'firebase';
 import {
-  Card, CardSection, Input, Button, Spinner,
+  Card, CardSection, Button,
 } from './common';
+import styles from './Styles';
 
 class Settings extends Component {
   onButtonPress() {
@@ -14,7 +15,7 @@ class Settings extends Component {
 
   render() {
     return (
-      <View style={{ marginTop: 30 }}>
+      <View style={styles.loginCard}>
         <Card>
           <CardSection>
             <Button onPress={this.onButtonPress.bind(this)}>

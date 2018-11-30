@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Image } from 'react-native';
 import firebase from 'firebase';
-import {
-  Card, CardSection, Input, Button, Spinner,
-} from './common';
+import styles from './Styles';
 
 class SplashScreen extends Component {
   componentDidMount() {
@@ -29,8 +27,8 @@ class SplashScreen extends Component {
 
   render() {
     return (
-      <View>
-        <Text>This is my Splash Screen</Text>
+      <View style={styles.splashview}>
+        <Image resizeMode="cover" source={require('./assets/welcome2.jpeg')} />
       </View>
     );
   }

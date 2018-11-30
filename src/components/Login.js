@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Alert } from 'react-native';
-import firebase from 'firebase';
 import {
-  Card, CardSection, Input, Button, Spinner,
+  Card, CardSection, Input, Button,
 } from './common';
+import styles from './Styles';
+import firebase from 'firebase';
 
 class Login extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class Login extends Component {
 
   render() {
     return (
-      <Card style={{ marginTop: 30 }}>
+      <Card style={styles.loginCard}>
         <CardSection>
           <Input
             label="Email"
