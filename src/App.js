@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { SafeAreaView } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
@@ -14,7 +15,9 @@ export default class App extends Component {
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
       <Provider store={store}>
-        <AppContainer />
+        <SafeAreaView style={{ flex: 1 }}>
+          <AppContainer />
+        </SafeAreaView>
       </Provider>
 
     );

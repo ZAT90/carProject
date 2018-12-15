@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import { Text, Alert } from 'react-native';
+import { Text, Alert, View } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { reserveListfetch } from '../../actions';
 import {
-  Card, CardSection, Input, Button, Header,
+  Card, CardSection, Input, Button, Header, GooglePlacesInput,
 } from '../common';
 
 class ReservationScreen extends Component {
   constructor(props) {
     super(props);
+    this.onChooseLocation = this.onChooseLocation.bind(this);
     this.state = {
       startText: '',
       finishtext: '',
+      finishLatlng: { latitude: 0.00, longitude: 0.00 },
     };
   }
 
@@ -28,10 +30,12 @@ class ReservationScreen extends Component {
   onPressReserve() {
     const { navigation } = this.props;
     const { currentUser } = firebase.auth();
-    const { startText, finishtext } = this.state;
+    const { finishtext, finishLatlng } = this.state;
+    const startText = navigation.getParam('placename', 'placename');
     const carId = navigation.getParam('carId', 'NO-ID');
     const carDetails = navigation.getParam('carDetails', 'some default value');
     const userId = currentUser.uid;
+    console.log('finishLatlng', carDetails);
     // this.checkIfAlreadyActivated();
     if (this.checkIfAlreadyActivated()) {
       Alert.alert(
@@ -43,7 +47,7 @@ class ReservationScreen extends Component {
     } else {
       console.log('this is a test gone');
       if (startText != '' && finishtext != '') {
-        this.createReservation(carId, startText, finishtext, userId, carDetails);
+        this.createReservation(carId, startText, finishtext, userId, carDetails, finishLatlng);
       } else {
         Alert.alert(
           'Oops!',
@@ -55,14 +59,27 @@ class ReservationScreen extends Component {
     }
   }
 
-  createReservation(carId, startText, finishtext, userId, carDetails) {
+  onChooseLocation(lat, lng, placename) {
+    console.log('onchangelocation', `${lat}//${lng}//${placename}`);
+    this.setState({
+      finishLatlng: {
+        latitude: lat,
+        longitude: lng,
+      },
+      finishtext: placename,
+    });
+  }
+
+  createReservation(carId, startText, finishtext, userId, carDetails, finishLatlng) {
     const { navigation } = this.props;
     firebase.database().ref(`/reservations/${userId}`)
       .push({
         carId,
+        finishLatlng,
         isActive: true,
         isCompleted: false,
         start_point: startText,
+        startLatLng: carDetails.latlng,
         finish_point: finishtext,
         carModel: carDetails.carModel,
         carName: carDetails.carName,
@@ -92,43 +109,44 @@ class ReservationScreen extends Component {
   render() {
     const { navigation, reservations } = this.props;
     const carDetails = navigation.getParam('carDetails', 'some default value');
+    const placename = navigation.getParam('placename', 'placename');
+    console.log('placename sent', placename);
     console.log('reservations render', reservations);
     return (
-      <Card>
-        <Header onPressBack={() => navigation.navigate('main')} isCarList={false} headerText="Reserve a trip" />
-        <CardSection style={{ flexDirection: 'column' }}>
-          <Text style={{ fontSize: 18 }}>{`${carDetails.carModel} ${carDetails.carName}`}</Text>
-          <Text style={{ fontSize: 18, marginTop: 5 }}>
+      <View style={{ flex: 1 }}>
+        <Card>
+          <Header onPressBack={() => navigation.navigate('main')} isCarList={false} headerText="Reserve a trip" />
+          <CardSection style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 18 }}>{`${carDetails.carModel} ${carDetails.carName}`}</Text>
+            <Text style={{ fontSize: 18, marginTop: 5 }}>
 Manufacture year:
-            {' '}
-            { carDetails.mfg_year }
-          </Text>
-          <Text style={{ marginTop: 5 }}>
+              {' '}
+              { carDetails.mfg_year }
+            </Text>
+            <Text style={{ marginTop: 5 }}>
 Transmission:
-            {' '}
-            { carDetails.transmission }
-          </Text>
-        </CardSection>
-        <CardSection>
-          <Input
-            label="Start From"
-            placeholder="Enter Start Location"
-            onChangeText={startText => this.setState({ startText })}
-          />
-        </CardSection>
-        <CardSection>
-          <Input
-            label="Go to"
-            placeholder="Enter Finish Location"
-            onChangeText={finishtext => this.setState({ finishtext })}
-          />
-        </CardSection>
-        <CardSection>
+              {' '}
+              { carDetails.transmission }
+            </Text>
+          </CardSection>
+          <CardSection style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 18 }}>Start from</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 3 }}>{placename}</Text>
+          </CardSection>
+          <CardSection>
+            <Text style={{ fontSize: 18 }}>Go to</Text>
+            <GooglePlacesInput onChangeLocation={this.onChooseLocation} />
+          </CardSection>
+        </Card>
+        <View style={{
+          height: 40, position: 'absolute', bottom: 150, width: 400,
+        }}
+        >
           <Button onPress={this.onPressReserve.bind(this)}>
-            Reserve
+                Reserve
           </Button>
-        </CardSection>
-      </Card>
+        </View>
+      </View>
     );
   }
 }
