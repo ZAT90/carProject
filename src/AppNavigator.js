@@ -23,7 +23,6 @@ const TabNavigator = createBottomTabNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
-        console.log('routename', routeName);
         let iconName;
         if (routeName === 'Home') {
           iconName = 'ios-home';

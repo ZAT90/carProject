@@ -16,7 +16,7 @@ class HomeScreen extends Component {
   }
 
   handleBackPress = () => {
-    BackHandler.exitApp(); // works best when the goBack is async
+    BackHandler.exitApp();
     return true;
   }
 

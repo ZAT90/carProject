@@ -17,7 +17,7 @@ class User extends Component {
   }
 
   handleBackPress = () => {
-    BackHandler.exitApp(); // works best when the goBack is async
+    BackHandler.exitApp(); 
     return true;
   }
   render() {
@@ -25,7 +25,6 @@ class User extends Component {
     console.log('USer current', currentUser);
     return (
       <Card>
-        <Header isCarList={false} headerText="Your profile" />
         <CardSection>
           <Text style={styles.carnamefont}>
 Email:

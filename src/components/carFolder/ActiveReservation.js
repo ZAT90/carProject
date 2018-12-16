@@ -20,7 +20,7 @@ class ActiveReservation extends Component {
   }
 
   handleBackPress = () => {
-    this.props.navigation.navigate('main') // works best when the goBack is async
+    this.props.navigation.navigate('main') 
     return true;
   }
   onCompletePress(tripId) {
@@ -64,14 +64,14 @@ class ActiveReservation extends Component {
         </View>
         <Card>
           <CardSection style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff' }}>Start from</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{activeTrip.start_point}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Going to</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{activeTrip.finish_point}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Car</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{`${activeTrip.carModel} ${activeTrip.carName}`}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Manufacture year</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{ activeTrip.mfg_year }</Text>
+            <Text style={styles.completefirstText}>Start from</Text>
+            <Text style={styles.complesecondText}>{activeTrip.start_point}</Text>
+            <Text style={styles.completefirstText2}>Going to</Text>
+            <Text style={styles.complesecondText}>{activeTrip.finish_point}</Text>
+            <Text style={styles.completefirstText2}>Car</Text>
+            <Text style={styles.complesecondText}>{`${activeTrip.carModel} ${activeTrip.carName}`}</Text>
+            <Text style={styles.completefirstText2}>Manufacture year</Text>
+            <Text style={styles.complesecondText}>{ activeTrip.mfg_year }</Text>
           </CardSection>
           <CardSection>
             <Button onPress={() => this.onCompletePress(activeId)}>

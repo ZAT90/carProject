@@ -123,25 +123,25 @@ class ReservationScreen extends Component {
       <View style={{ flex: 1 }}>
         <Card>
           <Header onPressBack={() => navigation.navigate('main')} isCarList={false} headerText="Reserve a trip" />
-          <CardSection style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 18 }}>{`${carDetails.carModel} ${carDetails.carName}`}</Text>
-            <Text style={{ fontSize: 18, marginTop: 5 }}>
+          <CardSection style={styles.reserveCardSection}>
+            <Text style={styles.carfont}>{`${carDetails.carModel} ${carDetails.carName}`}</Text>
+            <Text style={styles.mfgfont}>
 Manufacture year:
               {' '}
               { carDetails.mfg_year }
             </Text>
-            <Text style={{ marginTop: 5 }}>
+            <Text style={styles.transfont}>
 Transmission:
               {' '}
               { carDetails.transmission }
             </Text>
           </CardSection>
-          <CardSection style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 18 }}>Start from</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 3 }}>{placename}</Text>
+          <CardSection style={styles.reserveCardSection}>
+            <Text style={styles.carfont}>Start from</Text>
+            <Text style={styles.placefont}>{placename}</Text>
           </CardSection>
           <CardSection>
-            <Text style={{ fontSize: 18 }}>Go to</Text>
+            <Text style={styles.carfont}>Go to</Text>
             <GooglePlacesInput onChangeLocation={this.onChooseLocation} />
           </CardSection>
         </Card>

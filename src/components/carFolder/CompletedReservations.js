@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   CardSection, Header,
 } from '../common';
+import styles from './carStyles';
 
 class CompletedReservations extends Component {
   componentDidMount() {
@@ -17,7 +18,7 @@ class CompletedReservations extends Component {
   }
 
   handleBackPress = () => {
-    this.props.navigation.navigate('main') // works best when the goBack is async
+    this.props.navigation.navigate('main')
     return true;
   }
   renderListItems(listitem, index) {
@@ -26,14 +27,14 @@ class CompletedReservations extends Component {
     return (
       <View>
           <CardSection style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff' }}>Start from</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{carItems[1].start_point}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Going to</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{carItems[1].finish_point}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Car</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{`${carItems[1].carModel} ${carItems[1].carName}`}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Manufacture year</Text>
-            <Text style={{ color: '#484848', marginLeft: 10 }}>{ carItems[1].mfg_year }</Text>
+            <Text style={styles.completefirstText}>Start from</Text>
+            <Text style={styles.complesecondText}>{carItems[1].start_point}</Text>
+            <Text style={styles.completefirstText2}>Going to</Text>
+            <Text style={styles.complesecondText}>{carItems[1].finish_point}</Text>
+            <Text style={styles.completefirstText2}>Car</Text>
+            <Text style={styles.complesecondText}>{`${carItems[1].carModel} ${carItems[1].carName}`}</Text>
+            <Text style={styles.completefirstText2}>Manufacture year</Text>
+            <Text style={styles.complesecondText}>{ carItems[1].mfg_year }</Text>
           </CardSection>
       </View>
     );
@@ -67,13 +68,9 @@ class CompletedReservations extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('state reserve completed', state.reservelist);
-  console.log('state carlist completed', state.carList);
   const mapReservelist = state.reservelist ? state.reservelist : [];
   const RearrangeReserveData = Object.entries(mapReservelist);
   const checkres = RearrangeReserveData.filter(reserveValue => reserveValue[1].isCompleted);
-
-  console.log('it is true', checkres);
 
 
   return { complete_reservations: checkres };

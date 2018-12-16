@@ -26,8 +26,7 @@ class Login extends Component {
   onButtonPress() {
     const { userEmail, userPassword } = this.state;
     const { navigation } = this.props;
-    // this.props.navigation.navigate('main');
-    console.log('email and pass', `${userEmail}//${userPassword}`);
+
     firebase.auth().signInWithEmailAndPassword(userEmail, userPassword)
       .then(() => navigation.navigate('main'))
       .catch(() => Alert.alert(
@@ -39,7 +38,7 @@ class Login extends Component {
   }
 
   handleBackPress = () => {
-    BackHandler.exitApp(); // works best when the goBack is async
+    BackHandler.exitApp();
     return true;
   }
 

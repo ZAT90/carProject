@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Image, Platform } from 'react-native';
-import { StackActions, NavigationActions } from 'react-navigation';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import firebase from 'firebase';
 import styles from './Styles';
@@ -22,18 +21,15 @@ class SplashScreen extends Component {
     }
 
     firebase.auth().onAuthStateChanged((user) => {
-      console.log('user', user);
       if (Platform.OS === 'android') {
         RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
           .then((data) => {
-            console.log('popupdata', data);
             if (user) {
               navigation.navigate('main');
             } else {
               navigation.navigate('Login');
             }
           }).catch((err) => {
-            console.log('popuperr', err);
           });
       } else {
         if (user) {
@@ -42,13 +38,6 @@ class SplashScreen extends Component {
           navigation.navigate('Login');
         }
       }
-
-      // if (user) {
-      //     navigation.navigate('main');
-        
-      // } else {
-      //   navigation.navigate('Login');
-      // }
     });
   }
 

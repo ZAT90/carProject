@@ -8,11 +8,10 @@ const Header = (props) => {
     textStyle, viewStyle, leftHeader, rightHeader, middleHeader, textblue, textgreen,
   } = styles;
 
-  const backText = 'back';
+  const backText = 'Back';
   const myReservationText = 'Active reservation';
   const completeResText = 'Completed reservations';
 
-  console.log('props', props);
 
   return (
     <View style={viewStyle}>

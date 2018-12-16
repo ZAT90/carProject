@@ -34,7 +34,6 @@ class Carlist extends Component {
     this.props.carListfetch();
     this.watchId = navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log('firstlat', position.coords.latitude);
         // GEOCODING API COULD BE USED FOR GETTING THE USER CURRENT LOCATION NAME BUT THE FREE ACCOUNT
         // DOES NOT GIVE THE PLACE NAME PROPERLY, THAT IS WHY putting dummy data BUKIT DAMANSARA FOR THE CURRENT LOCATION
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyCz0hz27EZ27NarOoYbNAM0RPsVW9sx4pA`)
@@ -49,7 +48,7 @@ class Carlist extends Component {
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.0922,
+            latitudeDelta: 0.03,
             longitudeDelta: 0.0421,
           },
           error: null,
@@ -63,19 +62,6 @@ class Carlist extends Component {
     );
   }
 
-  // componentWillUnmount() {
-  //   navigator.geolocation.clearWatch(this.watchId);
-  // }
-
-  componentWillReceiveProps(nextProps) {
-    // console.log('check if no props', nextProps.cars);
-    // const newcars = nextProps.cars.map(car => console.log('map cars', car[1]));
-  }
-
-  // onRegionChange(region) {
-  //   this.setState({ region });
-  // }
-
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
@@ -87,7 +73,6 @@ class Carlist extends Component {
 
 
   onChooseLocation(lat, lng, placename) {
-    console.log('onchangelocation', `${lat}//${lng}//${placename}`);
     this.setState({
       latitude: lat,
       longitude: lng,
@@ -102,11 +87,7 @@ class Carlist extends Component {
     });
   }
 
-  renderListItems(carItems) {
-    // console.log('ListItem', `${listitem.item}/${index}`);
-    console.log('listitem', carItems);
-    // navigation.navigate('Reserve')
-    console.log('item', carItems[0]);
+  renderCallouts(carItems) {
     return (
       <View>
         <CardSection style={{ flexDirection: 'column' }}>
@@ -132,8 +113,6 @@ Transmission:
     const {
       latitude, longitude, error, region, placename,
     } = this.state;
-    console.log('check my states', `${latitude}//${longitude}//${error}//${region}`);
-    console.log('this.props.cars', cars);
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.mapcontainer}>
@@ -149,7 +128,7 @@ Transmission:
                 pinColor="#008000"
               >
                 <Callout onPress={() => navigation.navigate('Reserve', { carId: marker[0], carDetails: marker[1], placename })}>
-                  {this.renderListItems(marker)}
+                  {this.renderCallouts(marker)}
                 </Callout>
               </Marker>
             ))}
@@ -181,7 +160,6 @@ Transmission:
 
 
 const mapStateToProps = (state) => {
-  console.log('state', state);
   return { cars: Object.entries(state.carList) };
 };
 
