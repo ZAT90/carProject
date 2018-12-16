@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { Alert, BackHandler } from 'react-native';
 import {
   Card, CardSection, Input, Button,
 } from './common';
@@ -15,6 +15,14 @@ class Login extends Component {
     };
   }
 
+  componentDidMount(){
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
   onButtonPress() {
     const { userEmail, userPassword } = this.state;
     const { navigation } = this.props;
@@ -28,6 +36,11 @@ class Login extends Component {
         [{ text: 'OK', onPress: () => console.log('ok pressed') }],
 
       ));
+  }
+
+  handleBackPress = () => {
+    BackHandler.exitApp(); // works best when the goBack is async
+    return true;
   }
 
   render() {

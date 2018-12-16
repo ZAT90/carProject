@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, BackHandler } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { connect } from 'react-redux';
 import { reserveListfetch } from '../actions';
@@ -7,7 +7,17 @@ import styles from './Styles';
 
 class HomeScreen extends Component {
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     this.props.reserveListfetch();
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  handleBackPress = () => {
+    BackHandler.exitApp(); // works best when the goBack is async
+    return true;
   }
 
   componentWillReceiveProps(nextProps) {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  View, Text, FlatList,
+  View, Text, FlatList, BackHandler
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -8,34 +8,33 @@ import {
 } from '../common';
 
 class CompletedReservations extends Component {
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  handleBackPress = () => {
+    this.props.navigation.navigate('main') // works best when the goBack is async
+    return true;
+  }
   renderListItems(listitem, index) {
     const carItems = listitem.item;
     console.log('item', carItems[0]);
     return (
       <View>
-        <CardSection style={{ flexDirection: 'column' }}>
-          <Text style={{ fontSize: 18 }}>
-Start from:
-            {' '}
-            {carItems[1].start_point}
-          </Text>
-          <Text style={{ fontSize: 18 }}>
-Going to:
-            {' '}
-            {carItems[1].finish_point}
-          </Text>
-          <Text style={{ fontSize: 18 }}>{`${carItems[1].carModel} ${carItems[1].carName}`}</Text>
-          <Text style={{ fontSize: 18, marginTop: 5 }}>
-Manufacture year:
-            {' '}
-            { carItems[1].mfg_year }
-          </Text>
-          <Text style={{ marginTop: 5 }}>
-Transmission:
-            {' '}
-            { carItems[1].transmission }
-          </Text>
-        </CardSection>
+          <CardSection style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff' }}>Start from</Text>
+            <Text style={{ color: '#484848', marginLeft: 10 }}>{carItems[1].start_point}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Going to</Text>
+            <Text style={{ color: '#484848', marginLeft: 10 }}>{carItems[1].finish_point}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Car</Text>
+            <Text style={{ color: '#484848', marginLeft: 10 }}>{`${carItems[1].carModel} ${carItems[1].carName}`}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color:'#007aff', marginTop: 5 }}>Manufacture year</Text>
+            <Text style={{ color: '#484848', marginLeft: 10 }}>{ carItems[1].mfg_year }</Text>
+          </CardSection>
       </View>
     );
   }
@@ -43,18 +42,23 @@ Transmission:
   render() {
     const { navigation, complete_reservations } = this.props;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Header onPressBack={() => navigation.navigate('main')} isCarList={false} headerText="Completed Trips" />
         { complete_reservations.length > 0 ? (
+          <View style={{ paddingBottom: 100 }}>
           <FlatList
             data={complete_reservations}
+            contentContainerStyle={{ paddingBottom: 30}}
             renderItem={(item, index) => this.renderListItems(item, index)}
             keyExtractor={(item, index) => item[0]}
           />
+          </View>
         ) : (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
           <Text>
           You have not completed any trips yet. Please go to my reservation screen to get started
           </Text>
+          </View>
         ) }
 
       </View>

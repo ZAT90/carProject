@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, Platform } from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import firebase from 'firebase';
 import styles from './Styles';
 
 class SplashScreen extends Component {
   componentDidMount() {
-    const { navigation } = this.props;  
+    const { navigation } = this.props;
     const config = {
       apiKey: 'AIzaSyC1uqr45dOKKWoE48RRGPo6aBEIFev9qAk',
       authDomain: 'mycarproject-d8673.firebaseapp.com',
@@ -14,14 +16,39 @@ class SplashScreen extends Component {
       storageBucket: 'mycarproject-d8673.appspot.com',
       messagingSenderId: '840687807394',
     };
-    firebase.initializeApp(config);
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
 
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        navigation.navigate('main');
+      console.log('user', user);
+      if (Platform.OS === 'android') {
+        RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
+          .then((data) => {
+            console.log('popupdata', data);
+            if (user) {
+              navigation.navigate('main');
+            } else {
+              navigation.navigate('Login');
+            }
+          }).catch((err) => {
+            console.log('popuperr', err);
+          });
       } else {
-        navigation.navigate('Login');
+        if (user) {
+          navigation.navigate('main');
+        } else {
+          navigation.navigate('Login');
+        }
       }
+
+      // if (user) {
+      //     navigation.navigate('main');
+        
+      // } else {
+      //   navigation.navigate('Login');
+      // }
     });
   }
 

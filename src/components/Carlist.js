@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {
-  View, Text, FlatList, TouchableWithoutFeedback, TextInput, Dimensions,
+  View, Text, BackHandler,
 } from 'react-native';
 import { connect } from 'react-redux';
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps';
 import { carListfetch } from '../actions';
 import {
-  CardSection, Spinner, Header, Card, GooglePlacesInput, Menu,
+  CardSection, GooglePlacesInput, Button,
 } from './common';
 import styles from './Styles';
 
@@ -30,6 +30,7 @@ class Carlist extends Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     this.props.carListfetch();
     this.watchId = navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -38,10 +39,10 @@ class Carlist extends Component {
         // DOES NOT GIVE THE PLACE NAME PROPERLY, THAT IS WHY putting dummy data BUKIT DAMANSARA FOR THE CURRENT LOCATION
         fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=AIzaSyCz0hz27EZ27NarOoYbNAM0RPsVW9sx4pA`)
           .then((response) => { console.log('response fetch', response); response.json(); })
-          // .then((responseJson) => responseJson.movies)
           .catch((error) => {
             console.error(error);
           });
+
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -68,12 +69,22 @@ class Carlist extends Component {
 
   componentWillReceiveProps(nextProps) {
     // console.log('check if no props', nextProps.cars);
-    const newcars = nextProps.cars.map(car => console.log('map cars', car[1]));
+    // const newcars = nextProps.cars.map(car => console.log('map cars', car[1]));
   }
 
-  onRegionChange(region) {
-    this.setState({ region });
+  // onRegionChange(region) {
+  //   this.setState({ region });
+  // }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
+
+  handleBackPress = () => {
+    BackHandler.exitApp(); // works best when the goBack is async
+    return true;
+  }
+
 
   onChooseLocation(lat, lng, placename) {
     console.log('onchangelocation', `${lat}//${lng}//${placename}`);
@@ -117,10 +128,9 @@ Transmission:
 
 
   render() {
-    const { cars } = this.props;
-    const { navigation } = this.props;
+    const { cars, navigation } = this.props;
     const {
-      latitude, longitude, error, region, placename
+      latitude, longitude, error, region, placename,
     } = this.state;
     console.log('check my states', `${latitude}//${longitude}//${error}//${region}`);
     console.log('this.props.cars', cars);
@@ -146,18 +156,25 @@ Transmission:
           </MapView>
         </View>
         <GooglePlacesInput onChangeLocation={this.onChooseLocation} />
+        <View style={styles.activeResBtnView}>
+          <Button
+            buttonviewStyle={styles.activeBtnTouchStyle}
+            buttonTxtStyle={styles.activeBtnTextStyle}
+            onPress={() => navigation.navigate('ActiveRes')}
+          >
+                Active Reservation
+          </Button>
+        </View>
+        <View style={styles.completeResBtnView}>
+          <Button
+            buttonviewStyle={styles.activeBtnTouchStyle}
+            buttonTxtStyle={styles.completeBtnTextStyle}
+            onPress={() => navigation.navigate('CompletedRes')}
+          >
+                Completed Reservations
+          </Button>
+        </View>
       </View>
-    // <Card>
-    //   <Header onPressRight={() => navigation.navigate('CompletedRes')} onPressBack={() => navigation.navigate('ActiveRes')} isCarList headerText="List of Cars" />
-    //   {cars ? (
-    //     <FlatList
-    //       data={cars}
-    //       renderItem={(item, index) => this.renderListItems(item, index)}
-    //       keyExtractor={item => item[0]}
-    //     />
-    //   ) : <Spinner />}
-
-    // </Card>
     );
   }
 }

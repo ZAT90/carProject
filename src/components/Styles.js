@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     width,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -43,6 +42,15 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor:'yellow',
     borderWidth: 0.0,
+  },
+  activeResBtnView: {
+    height: 40, position: 'absolute', bottom: 10, width: width / 2.5,
+  },
+  activeBtnTextStyle: { fontSize: 12, color: '#007aff' },
+  completeBtnTextStyle: { fontSize: 10, color: '#007aff' },
+  activeBtnTouchStyle: { borderRadius: 5, borderWidth: 1, borderColor: '#007aff' },
+  completeResBtnView: {
+    height: 40, position: 'absolute', bottom: 10, width: width / 2.3, right: 0,
   },
 });
 

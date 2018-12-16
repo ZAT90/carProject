@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Text, Alert, View } from 'react-native';
+import { Text, Alert, View, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { reserveListfetch } from '../../actions';
 import {
-  Card, CardSection, Input, Button, Header, GooglePlacesInput,
+  Card, CardSection, Button, Header, GooglePlacesInput,
 } from '../common';
+import styles from './carStyles';
 
 class ReservationScreen extends Component {
   constructor(props) {
@@ -17,9 +18,18 @@ class ReservationScreen extends Component {
       finishLatlng: { latitude: 0.00, longitude: 0.00 },
     };
   }
-
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     this.props.reserveListfetch();
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  handleBackPress = () => {
+    this.props.navigation.navigate('main') // works best when the goBack is async
+    return true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +46,6 @@ class ReservationScreen extends Component {
     const carDetails = navigation.getParam('carDetails', 'some default value');
     const userId = currentUser.uid;
     console.log('finishLatlng', carDetails);
-    // this.checkIfAlreadyActivated();
     if (this.checkIfAlreadyActivated()) {
       Alert.alert(
         'Oops!',
@@ -45,7 +54,6 @@ class ReservationScreen extends Component {
 
       );
     } else {
-      console.log('this is a test gone');
       if (startText != '' && finishtext != '') {
         this.createReservation(carId, startText, finishtext, userId, carDetails, finishLatlng);
       } else {
@@ -60,7 +68,6 @@ class ReservationScreen extends Component {
   }
 
   onChooseLocation(lat, lng, placename) {
-    console.log('onchangelocation', `${lat}//${lng}//${placename}`);
     this.setState({
       finishLatlng: {
         latitude: lat,
@@ -138,10 +145,7 @@ Transmission:
             <GooglePlacesInput onChangeLocation={this.onChooseLocation} />
           </CardSection>
         </Card>
-        <View style={{
-          height: 40, position: 'absolute', bottom: 150, width: 400,
-        }}
-        >
+        <View style={styles.reserveBtnStyle}>
           <Button onPress={this.onPressReserve.bind(this)}>
                 Reserve
           </Button>

@@ -11,5 +11,6 @@
       "class-methods-use-this": 0 ,
       "react/jsx-no-bind": 0 ,
       "import/prefer-default-export": 0,
+      "no-lonely-if": 0 ,
     }
    }

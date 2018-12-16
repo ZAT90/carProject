@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, BackHandler } from 'react-native';
 import firebase from 'firebase';
 import {
   Card, CardSection, Button,
@@ -7,6 +7,18 @@ import {
 import styles from './Styles';
 
 class Settings extends Component {
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  handleBackPress = () => {
+    BackHandler.exitApp(); // works best when the goBack is async
+    return true;
+  }
   onButtonPress() {
     firebase.auth().signOut()
       .then(() => console.log('user signed out'))
